@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  discordbot:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: discord-bot-deskovky
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      - DISCORD_TOKEN=${DISCORD_TOKEN}
+      - DISCORD_COMMAND_PREFIX=${DISCORD_COMMAND_PREFIX:-!}
+      - API_BASE_URL=${API_BASE_URL:-https://www.zatrolene-hry.cz/api}
+    # Healthcheck to ensure bot is running
+    healthcheck:
+      test: ["CMD-SHELL", "pgrep -f bot.py || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    # Logging configuration
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"

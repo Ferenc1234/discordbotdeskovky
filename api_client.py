@@ -224,12 +224,6 @@ class ZatroleneHryClient:
         
         return []
     
-    def __del__(self):
-        """Cleanup when object is destroyed"""
-        if self.session and not self.session.closed:
-            # Note: This is not ideal for async cleanup
-            # Better to explicitly call _close_session() when done
-            try:
-                asyncio.get_event_loop().run_until_complete(self._close_session())
-            except Exception:
-                pass
+    async def close(self):
+        """Close the API client session. Should be called when done using the client."""
+        await self._close_session()

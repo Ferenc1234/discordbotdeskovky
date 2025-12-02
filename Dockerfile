@@ -22,5 +22,9 @@ COPY api_client.py .
 RUN useradd -m -u 1000 botuser && chown -R botuser:botuser /app
 USER botuser
 
+EXPOSE 5000
+
 # Run the bot
 CMD ["python", "-u", "bot.py"]
+
+
